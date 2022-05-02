@@ -1,0 +1,26 @@
+{
+  "name": "cisc3140_lab4",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jiaojiaon/CISC3140_Lab4.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jiaojiaon/CISC3140_Lab4/issues"
+  },
+  "homepage": "https://github.com/jiaojiaon/CISC3140_Lab4#readme",
+  "dependencies": {
+    "express": "^4.18.1",
+    "md5": "^2.3.0",
+    "nodemon": "^2.0.16",
+    "pg": "^8.7.3",
+    "sqlite3": "^5.0.6"
+  }
+}
