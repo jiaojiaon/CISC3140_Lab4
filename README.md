@@ -52,3 +52,9 @@ Run using the command below to create database tables in sql and csv.
 ```sh
 $ make lab2
 ```
+Run using the command below to connect and run the database to the server in [index.js](index.js). 
+```sh
+node index.js
+or
+npm run start
+```
