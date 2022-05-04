@@ -1,44 +1,47 @@
-// Create express app
-var express = require("express")
-var app = express()
-var db = require("./database.js")
-var md5 = require("md5")
+const sqlite3 = require('sqlite3');
+var express = require("express");
+var app = express();
 
-var bodyParser = require("body-parser");
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(bodyParser.json());
+// req.body
+app.use(express.json())
 
-// Server port
-var HTTP_PORT = 8000 
-// Start server
+const HTTP_PORT = 3030
 app.listen(HTTP_PORT, () => {
-    console.log("Server running on port %PORT%".replace("%PORT%",HTTP_PORT))
+    console.log("Server is listening on port " + HTTP_PORT);
 });
+
+const db = new sqlite3.Database('Lab4DB.db', (err) => {
+    if (err) {
+        console.error("Erro opening database " + err.message);
+    } else {
+        console.log('Connected to the SQLite database.')
+    }
+});
+
+// // var bodyParser = require("body-parser");
+// // app.use(bodyParser.urlencoded({ extended: false }));
+// // app.use(bodyParser.json());
+
 // Root endpoint
 app.get("/", (req, res, next) => {
     res.json({"message":"Ok"})
 });
 
-// Insert here other API endpoints
-// a.i.Display all the informaiton in the data CSV file
-app.get("/api/all", (req,res,next) => {
-    var sql = "select * from Car_data"
-    var params = []
-    db.all(sql, params, (err, rows) =>{
-        if(err){
-            res.status(400).json({"error":err.message});
+// // Insert here other API endpoints
+// // a.i.Display all the informaiton in the data CSV file
+app.get("/all", (req, res, next) => {
+    db.all("SELECT * FROM Car_data", [], (err, rows) => {
+        if (err) {
+            res.status(400).json({ "error": err.message });
             return;
         }
-        res.json({
-            "message":"success",
-            "data":rows
-        })
+        res.status(200).json({ rows });
     });
 });
 
 // a.ii.Get a list of cars in the Cars table
-app.get("/api/cars", (req,res,next) => {
-    var sql = "select * from Cars"
+app.get("/cars", (req,res,next) => {
+    var sql = "SELECT * FROM Cars"
     var params = []
     db.all(sql, params, (err, rows) =>{
         if(err){
@@ -53,8 +56,8 @@ app.get("/api/cars", (req,res,next) => {
 });
 
 // a.ii.Get a list of owners in the Owners table
-app.get("/api/owners", (req,res,next) => {
-    var sql = "select * from Owners"
+app.get("/owners", (req,res,next) => {
+    var sql = "SELECT * FROM Owners"
     var params = []
     db.all(sql, params, (err, rows) =>{
         if(err){
@@ -69,7 +72,7 @@ app.get("/api/owners", (req,res,next) => {
 });
 
 // a.ii.Get a single record of car by id in the Cars table
-app.get("/api/cars/:carid", (req,res,next) => {
+app.get("/cars/:carid", (req,res,next) => {
     var sql = "select * from Cars where Car_ID = ?"
     var params = [req.params.carid]
     db.all(sql, params, (err, rows) =>{
@@ -85,8 +88,8 @@ app.get("/api/cars/:carid", (req,res,next) => {
 });
 
 // a.ii.Get a single record of owner by id in the Owners table
-app.get("/api/owners/:carid", (req,res,next) => {
-    var sql = "select * from Owners where Car_ID = ?"
+app.get("/owners/:carid", (req,res,next) => {
+    var sql = "SELECT * FROM Owners where Car_ID = ?"
     var params = [req.params.carid]
     db.all(sql, params, (err, rows) =>{
         if(err){
@@ -101,7 +104,7 @@ app.get("/api/owners/:carid", (req,res,next) => {
 });
 
 // b. Inserting new data record of owners by post 
-app.post("/api/owners/", (req, res, next) => {
+app.post("/owners/", (req, res, next) => {
     var errors=[]
     if (!req.body.Car_ID){
         errors.push("No id specified");
@@ -137,7 +140,7 @@ app.post("/api/owners/", (req, res, next) => {
 });
 
 // b. Inserting new data record of cars by post 
-app.post("/api/cars/", (req, res, next) => {
+app.post("/cars/", (req, res, next) => {
     var errors=[]
     if (!req.body.Car_ID){
         errors.push("No id specified");
@@ -178,7 +181,7 @@ app.post("/api/cars/", (req, res, next) => {
 
 // updating car records by car id 
 //Since each field could be empty (not updated), we use COALESCE function to keep the current value if there is no new value (null).
-app.patch("/api/cars/:carid", (req, res, next) => {
+app.patch("/cars/:carid", (req, res, next) => {
     var data = {
         carid: req.params.carid,
         Year: req.body.Year,
@@ -206,7 +209,7 @@ app.patch("/api/cars/:carid", (req, res, next) => {
 });
 
 // updating owner records by carid
-app.patch("/api/owners/:carid", (req, res, next) => {
+app.patch("/owners/:carid", (req, res, next) => {
     var data = {
         carid: req.params.carid,
         Email: req.body.Email,
