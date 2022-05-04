@@ -18,17 +18,18 @@ const db = new sqlite3.Database('Lab4DB.db', (err) => {
     }
 });
 
-// // var bodyParser = require("body-parser");
-// // app.use(bodyParser.urlencoded({ extended: false }));
-// // app.use(bodyParser.json());
+// var bodyParser = require("body-parser");
+// app.use(bodyParser.urlencoded({ extended: false }));
+// app.use(bodyParser.json());
 
 // Root endpoint
 app.get("/", (req, res, next) => {
     res.json({"message":"Ok"})
 });
 
-// // Insert here other API endpoints
-// // a.i.Display all the informaiton in the data CSV file
+// Insert here other API endpoints
+// a.i.Display all the informaiton in the data CSV file
+// http://localhost:3030/all
 app.get("/all", (req, res, next) => {
     db.all("SELECT * FROM Car_data", [], (err, rows) => {
         if (err) {
@@ -40,6 +41,7 @@ app.get("/all", (req, res, next) => {
 });
 
 // a.ii.Get a list of cars in the Cars table
+// http://localhost:3030/cars
 app.get("/cars", (req,res,next) => {
     var sql = "SELECT * FROM Cars"
     var params = []
@@ -56,6 +58,7 @@ app.get("/cars", (req,res,next) => {
 });
 
 // a.ii.Get a list of owners in the Owners table
+// http://localhost:3030/owners
 app.get("/owners", (req,res,next) => {
     var sql = "SELECT * FROM Owners"
     var params = []
@@ -72,6 +75,7 @@ app.get("/owners", (req,res,next) => {
 });
 
 // a.ii.Get a single record of car by id in the Cars table
+// http://localhost:3030/cars/207
 app.get("/cars/:carid", (req,res,next) => {
     var sql = "select * from Cars where Car_ID = ?"
     var params = [req.params.carid]
@@ -88,6 +92,7 @@ app.get("/cars/:carid", (req,res,next) => {
 });
 
 // a.ii.Get a single record of owner by id in the Owners table
+// http://localhost:3030/owners/207
 app.get("/owners/:carid", (req,res,next) => {
     var sql = "SELECT * FROM Owners where Car_ID = ?"
     var params = [req.params.carid]
@@ -104,6 +109,7 @@ app.get("/owners/:carid", (req,res,next) => {
 });
 
 // b. Inserting new data record of owners by post 
+// http://localhost:3030/owners/
 app.post("/owners/", (req, res, next) => {
     var errors=[]
     if (!req.body.Car_ID){
@@ -140,6 +146,7 @@ app.post("/owners/", (req, res, next) => {
 });
 
 // b. Inserting new data record of cars by post 
+// http://localhost:3030/cars/
 app.post("/cars/", (req, res, next) => {
     var errors=[]
     if (!req.body.Car_ID){
@@ -181,6 +188,7 @@ app.post("/cars/", (req, res, next) => {
 
 // updating car records by car id 
 //Since each field could be empty (not updated), we use COALESCE function to keep the current value if there is no new value (null).
+//http://localhost:3030/cars/3009
 app.patch("/cars/:carid", (req, res, next) => {
     var data = {
         carid: req.params.carid,
@@ -209,6 +217,7 @@ app.patch("/cars/:carid", (req, res, next) => {
 });
 
 // updating owner records by carid
+// http://localhost:3030/owners/3009
 app.patch("/owners/:carid", (req, res, next) => {
     var data = {
         carid: req.params.carid,
