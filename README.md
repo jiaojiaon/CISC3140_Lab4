@@ -58,3 +58,24 @@ node index.js
 or
 npm run start
 ```
+## A description of API endpoints
+- GET /all 
+   - Display all the informaiton in the data CSV file
+
+- GET /cars 
+  - Get a list of cars in the Cars table
+
+- GET /owners 
+  - Get a list of owners in the Owners table
+
+- POST /owners/
+  - Inserting new data record of owners by post 
+
+- POST /cars/
+  - Inserting new data record of car by post 
+
+- PATCH /cars/{carid}
+  - Updating car records by car id 
+
+- PATCH /owners/{carid}
+  - Updating owner records by car id 
