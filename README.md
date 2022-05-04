@@ -61,21 +61,28 @@ npm run start
 ## A description of API endpoints
 - GET /all 
    - Display all the informaiton in the data CSV file
+   - http://localhost:3030/all
 
 - GET /cars 
   - Get a list of cars in the Cars table
+  - http://localhost:3030/cars
 
 - GET /owners 
   - Get a list of owners in the Owners table
+  - http://localhost:3030/owners
 
 - POST /owners/
   - Inserting new data record of owners by post 
+  - http://localhost:3030/owners/
 
 - POST /cars/
   - Inserting new data record of car by post 
+  - http://localhost:3030/cars/
 
 - PATCH /cars/{carid}
   - Updating car records by car id 
+  - http://localhost:3030/cars/{carid}
 
 - PATCH /owners/{carid}
   - Updating owner records by car id 
+  - http://localhost:3030/{carid}
