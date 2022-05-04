@@ -75,7 +75,7 @@ app.get("/owners", (req,res,next) => {
 });
 
 // a.ii.Get a single record of car by id in the Cars table
-// http://localhost:3030/cars/207
+// http://localhost:3030/cars/{carid}
 app.get("/cars/:carid", (req,res,next) => {
     var sql = "select * from Cars where Car_ID = ?"
     var params = [req.params.carid]
@@ -92,7 +92,7 @@ app.get("/cars/:carid", (req,res,next) => {
 });
 
 // a.ii.Get a single record of owner by id in the Owners table
-// http://localhost:3030/owners/207
+// http://localhost:3030/owners/(carid)
 app.get("/owners/:carid", (req,res,next) => {
     var sql = "SELECT * FROM Owners where Car_ID = ?"
     var params = [req.params.carid]
@@ -111,84 +111,45 @@ app.get("/owners/:carid", (req,res,next) => {
 // b. Inserting new data record of owners by post 
 // http://localhost:3030/owners/
 app.post("/owners/", (req, res, next) => {
-    var errors=[]
-    if (!req.body.Car_ID){
-        errors.push("No id specified");
-    }
-    if (!req.body.Name){
-        errors.push("No name specified");
-    }
-    if (!req.body.Email){
-        errors.push("No email specified");
-    }
-    if (errors.length){
-        res.status(400).json({"error":errors.join(",")});
-        return;
-    }
-    var data = {
-        Car_ID: req.body.Car_ID,
-        Name: req.body.Name,
-        Email: req.body.Email
-    }
-    var sql ='INSERT INTO Owners (Car_ID, Name, Email) VALUES (?,?,?)'
-    var params =[data.Car_ID, data.Name, data.Email]
-    db.run(sql, params, function (err, result) {
-        if (err){
-            res.status(400).json({"error": err.message})
-            return;
-        }
-        res.json({
-            "message": "success",
-            "data": data,
-            "id" : this.lastID
-        })
-    });
+    var reqBody = req.body;
+    db.run("INSERT INTO Owners (Car_ID, Name, Email) VALUES (?, ?, ?)",
+        [reqBody.Car_ID, reqBody.Name, reqBody.Email],
+        function (err, result) {
+            if (err) {
+                res.status(400).json({ "error": err.message })
+                return;
+            }
+            res.status(201).json({
+                "message": "success",
+                "data": row,
+                "Car_ID": this.lastID
+            })
+        });
 });
 
 // b. Inserting new data record of cars by post 
 // http://localhost:3030/cars/
 app.post("/cars/", (req, res, next) => {
-    var errors=[]
-    if (!req.body.Car_ID){
-        errors.push("No id specified");
-    }
-    if (!req.body.Year){
-        errors.push("No year specified");
-    }
-    if (!req.body.Make){
-        errors.push("No make specified");
-    }
-    if (!req.body.Model){
-        errors.push("No model specified");
-    }
-    if (errors.length){
-        res.status(400).json({"error":errors.join(",")});
-        return;
-    }
-    var data = {
-        Car_ID: req.body.Car_ID,
-        Year: req.body.Year,
-        Make: req.body.Make,
-        Model: req.body.Model
-    }
-    var sql ='INSERT INTO Cars (Car_ID, Year, Make, Model) VALUES (?,?,?,?)'
-    var params =[data.Car_ID, data.Year, data.Make, data.Model]
-    db.run(sql, params, function (err, result) {
-        if (err){
-            res.status(400).json({"error": err.message})
-            return;
-        }
-        res.json({
-            "message": "success",
-            "data": data,
-            "id" : this.lastID
-        })
-    });
+    var reqBody = req.body;
+    db.run("INSERT INTO Cars (Car_ID, Year, Make, Model) VALUES (?, ?, ?, ?)",
+        [reqBody.Car_ID, reqBody.Year, reqBody.Make, reqBody.Model],
+        function (err, result) {
+            if (err) {
+                res.status(400).json({ "error": err.message })
+                return;
+            }
+            res.status(201).json({
+                "message": "success",
+                "data": row,
+                "Car_ID": this.lastID
+            })
+        });
 });
 
-// updating car records by car id 
+
+//updating car records by car id 
 //Since each field could be empty (not updated), we use COALESCE function to keep the current value if there is no new value (null).
-//http://localhost:3030/cars/3009
+//http://localhost:3030/cars/{carid}
 app.patch("/cars/:carid", (req, res, next) => {
     var data = {
         carid: req.params.carid,
@@ -217,7 +178,7 @@ app.patch("/cars/:carid", (req, res, next) => {
 });
 
 // updating owner records by carid
-// http://localhost:3030/owners/3009
+// http://localhost:3030/owners/{carid}
 app.patch("/owners/:carid", (req, res, next) => {
     var data = {
         carid: req.params.carid,
@@ -243,6 +204,7 @@ app.patch("/owners/:carid", (req, res, next) => {
             })
     });
 })
+
 
 // Default response for any other request
 app.use(function(req, res){
