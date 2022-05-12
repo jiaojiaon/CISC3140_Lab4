@@ -2,6 +2,9 @@ const sqlite3 = require('sqlite3');
 var express = require("express");
 var app = express();
 
+const cors = require("cors");
+app.use(cors());
+
 // req.body
 app.use(express.json())
 
@@ -111,37 +114,50 @@ app.get("/owners/:carid", (req,res,next) => {
 // b. Inserting new data record of owners by post 
 // http://localhost:3030/owners/
 app.post("/owners/", (req, res, next) => {
-    var reqBody = req.body;
-    db.run("INSERT INTO Owners (Car_ID, Name, Email) VALUES (?, ?, ?)",
-        [reqBody.Car_ID, reqBody.Name, reqBody.Email],
-        function (err, result) {
-            if (err) {
-                res.status(400).json({ "error": err.message })
-                return;
-            }
-            res.status(201).json({
-                "message": "success",
-                "data": row,
-                "Car_ID": this.lastID
-            })
-        });
+  var sql = "INSERT INTO Owners (Car_ID, Name, Email) VALUES (?, ?, ?)"
+  params = [];
+  var errors = []
+  if(!req.body.carid && req.body.carid != 0) { errors.push("No Car ID specified"); }
+  if(!req.body.name) { errors.push("No Name specified"); }
+  if(!req.body.email) { errors.push("No Email specified"); }
+  if(errors.length) {
+      res.status(400).json({"error": errors.join(",")});
+      return;
+  }
+  params.push(req.body.carid, req.body.name, req.body.email)
+  db.run(sql, params, function(err, result) {
+
+      if(err) {
+          res.status(400).json({"error": err.message})
+          return;
+      }
+            res.json({
+           "message": "success",
+           "data": params,
+           "id": this.lastID
+      })
+
+  });
 });
 
 // b. Inserting new data record of cars by post 
 // http://localhost:3030/cars/
 app.post("/cars/", (req, res, next) => {
     var reqBody = req.body;
-    db.run("INSERT INTO Cars (Car_ID, Year, Make, Model) VALUES (?, ?, ?, ?)",
-        [reqBody.Car_ID, reqBody.Year, reqBody.Make, reqBody.Model],
-        function (err, result) {
+    var sql = "INSERT INTO Cars (Car_ID, Year, Make, Model) VALUES (?, ?, ?, ?)"
+    var params = []
+
+    params.push(reqBody.Car_ID, reqBody.Year, reqBody.Make, reqBody.Model)
+
+        db.run(sql,params,function(err, result) {
             if (err) {
                 res.status(400).json({ "error": err.message })
                 return;
             }
             res.status(201).json({
                 "message": "success",
-                "data": row,
-                "Car_ID": this.lastID
+                "data": params,
+                "id": this.lastID
             })
         });
 });
