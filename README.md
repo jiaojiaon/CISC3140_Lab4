@@ -86,7 +86,7 @@ You must have the following installed:
 
 ## Setup
 1. Sign up for a GitHub account if you don't have one. Set up your SSH keys with github.
-2. Clone this repository: git clone git@github.com:jiaojiaon/CISC3140_Lab4.git to your machine to get a copy.
+2. Clone this repository: `git clone git@github.com:jiaojiaon/CISC3140_Lab4.git` to your machine to get a copy.
 3. Move into the project's root directory with `cd CISC3140_Lab4`
 4. Update submodule: git submodule update
 6. Run using the command below to create database tables in sql and csv. 
