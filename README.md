@@ -33,12 +33,11 @@ API endpoint support the following features:
 * Sample Data: https://gist.github.com/katychuang/d66a59b6db4e59c16efd4c42ad411f8e
 * BC Linux machines
 
-You must have the following installed. 
-
-- NodeJS
-- npm install express
-- npm install sqlite3
-- npm install md5
+- express
+- md5
+- nodemon
+- pg
+- sqlite3
   
 ## Installation
 Copy repo to local machine. The repo contains a single file named `data.csv`
@@ -48,16 +47,14 @@ $ git clone git@github.com:jiaojiaon/CISC3140_Lab4.git
 $ git submodule init
 $ git submodule update
 ```
-Run using the command below to create database tables in sql and csv. 
-```sh
-$ make lab2
-```
-Run using the command below to connect and run the database to the server in [index.js](index.js). 
-```sh
-node index.js
-or
-npm run start
-```
+You must have the following installed: 
+
+- NodeJS
+- npm install express
+- npm install sqlite3
+- npm install md5
+
+
 ## A description of API endpoints
 - GET /all 
    - Display all the informaiton in the data CSV file
@@ -86,3 +83,19 @@ npm run start
 - PATCH /owners/{carid}
   - Updating owner records by car id 
   - http://localhost:3030/{carid}
+
+## Setup
+1. Sign up for a GitHub account if you don't have one. Set up your SSH keys with github.
+2. Clone this repository: git clone git@github.com:jiaojiaon/CISC3140_Lab4.git to your machine to get a copy.
+3. Move into the project's root directory with `cd CISC3140_Lab4`
+4. Update submodule: git submodule update
+6. Run using the command below to create database tables in sql and csv. 
+```sh
+$ make lab4
+``` 
+7. Run using the command below to connect and run the database to the server in [index.js](index.js). 
+```sh
+node index.js
+or
+npm start
+```
